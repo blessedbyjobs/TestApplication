@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TestApplication</string>
+
+    <string name="search_bar_text">Поиск по названию фильма</string>
 </resources>
