@@ -3,4 +3,7 @@
     <color name="colorPrimary">#004fff</color>
     <color name="mainBackground">#1c1d1f</color>
     <color name="searchBar">#fafafa</color>
+
+    <color name="film_title">#de000000</color>
+    <color name="film_description">#8b000000</color>
 </resources>
