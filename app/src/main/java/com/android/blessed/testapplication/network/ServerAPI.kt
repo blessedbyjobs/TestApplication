@@ -23,7 +23,7 @@ interface ServerAPI {
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.themoviedb.org/3/")
+                .baseUrl(StringUtils.BASE_URL)
                 .build()
 
             return retrofit.create(ServerAPI::class.java)

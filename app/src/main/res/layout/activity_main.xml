@@ -36,12 +36,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/films_recycler_view"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="vertical"
-                    android:overScrollMode="never"/>
+                    android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/films_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="vertical"
+                        android:overScrollMode="never"/>
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -58,6 +64,35 @@
                     android:theme="@style/AppTheme.SearchProgressBar"
                     android:layout_centerInParent="true"
                     android:translationZ="2dp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/error_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                android:gravity="center_vertical">
+
+            <ImageView
+                    android:id="@+id/alert_triangle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_alert_triangle"
+                    android:layout_centerHorizontal="true"/>
+
+            <TextView
+                    android:id="@+id/error_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="32dp"
+                    android:text="@string/loading_error"
+                    android:textColor="@color/error_textview_color"
+                    android:layout_below="@+id/alert_triangle"
+                    android:gravity="center_horizontal"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="10sp"
+                    android:layout_centerHorizontal="true"/>
 
         </RelativeLayout>
 

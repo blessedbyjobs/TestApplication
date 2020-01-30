@@ -6,4 +6,7 @@
 
     <color name="film_title">#de000000</color>
     <color name="film_description">#8b000000</color>
+
+    <color name="snackbar_background">#323232</color>
+    <color name="error_textview_color">#b4b4b4</color>
 </resources>
