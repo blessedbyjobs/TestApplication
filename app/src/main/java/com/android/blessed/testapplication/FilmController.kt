@@ -11,7 +11,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.android.material.snackbar.Snackbar
 import ru.surfstudio.android.easyadapter.controller.BindableItemController
 import ru.surfstudio.android.easyadapter.holder.BindableViewHolder
 import java.text.SimpleDateFormat
@@ -43,28 +42,46 @@ class FilmController(val onClickListener: (data: Film) -> Unit) : BindableItemCo
             filmTitle.text = data.title
             filmDescription.text = data.overview
 
-            Glide.with(this.itemView)
-                .asDrawable()
-                .load(StringUtils.IMAGE_BASE_URL + data.poster_path)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .override(360, 360)
-                .into(object : CustomTarget<Drawable>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {
+            if (data.poster_path == null) {
+                Glide.with(this.itemView)
+                    .load(R.drawable.placeholder)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .override(360, 360)
+                    .into(object : CustomTarget<Drawable>() {
+                        override fun onLoadCleared(placeholder: Drawable?) {
 
-                    }
+                        }
 
-                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        filmPoster.setImageDrawable(resource)
-                    }
+                        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                            filmPoster.setImageDrawable(resource)
+                        }
 
-                })
+                    })
+            }
+            else {
+                Glide.with(this.itemView)
+                    .asDrawable()
+                    .load(StringUtils.IMAGE_BASE_URL + data.poster_path)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .override(360, 360)
+                    .into(object : CustomTarget<Drawable>() {
+                        override fun onLoadCleared(placeholder: Drawable?) {
+
+                        }
+
+                        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                            filmPoster.setImageDrawable(resource)
+                        }
+
+                    })
+            }
 
             filmReleaseDate.text = formatDate(data.release_date)
 
             this.itemView.setOnClickListener {
-                CustomSnackBar(Snackbar.make(it, filmTitle.text, Snackbar.LENGTH_LONG), this.itemView.context).snackbar.show()
+                onClickListener(data)
             }
 
             filmLike.setOnClickListener {
@@ -74,10 +91,15 @@ class FilmController(val onClickListener: (data: Film) -> Unit) : BindableItemCo
 
         private fun formatDate(date: String): String {
             val generalDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val dateObj = generalDate.parse(date) as Date
 
-            val normalDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.getDefault())
-            return normalDate.format(dateObj).toString()
+            return try {
+                val dateObj = generalDate.parse(date) as Date
+
+                val normalDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.getDefault())
+                normalDate.format(dateObj).toString()
+            } catch (e: Exception) {
+                "Неизвестно"
+            }
         }
     }
 }

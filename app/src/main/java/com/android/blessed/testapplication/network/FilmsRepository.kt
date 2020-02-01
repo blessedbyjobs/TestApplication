@@ -19,4 +19,13 @@ class FilmsRepository(private val api: ServerAPI) {
             StringUtils.INCLUDE_VIDEO_VALUE
         )
     }
+
+    fun searchFilms(query: String): Observable<DiscoverResponse> {
+        return api.searchFilms(
+            StringUtils.API_KEY_VALUE,
+            StringUtils.LANGUAGE_VALUE,
+            query,
+            StringUtils.INCLUDE_ADULT_VALUE
+        )
+    }
 }

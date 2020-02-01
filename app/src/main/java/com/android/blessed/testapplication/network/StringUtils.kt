@@ -18,4 +18,5 @@ object StringUtils {
     const val INCLUDE_VIDEO_VALUE = "false"
 
     const val SEARCH = "search/movie"
+    const val SEARCH_QUERY = "query"
 }

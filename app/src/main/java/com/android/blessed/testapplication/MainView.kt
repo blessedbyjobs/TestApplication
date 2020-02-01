@@ -4,7 +4,6 @@ import com.android.blessed.testapplication.models.Film
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.*
 
-@StateStrategyType(AddToEndSingleTagStrategy::class)
 interface MainView : MvpView {
     fun displayDiscoveredFilms(films: List<Film>)
 
@@ -17,4 +16,6 @@ interface MainView : MvpView {
     fun showRequestError()
     fun showLoadingError()
     fun hideLoadingError()
+    fun showEmptyResultsError(query: String)
+    fun hideEmptyResultsError()
 }

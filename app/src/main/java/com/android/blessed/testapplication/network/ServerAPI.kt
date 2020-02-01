@@ -18,6 +18,14 @@ interface ServerAPI {
         @Query(StringUtils.INCLUDE_VIDEO) INCLUDE_VIDEO : String
     ) : Observable<DiscoverResponse>
 
+    @GET(StringUtils.SEARCH)
+    fun searchFilms(
+        @Query(StringUtils.API_KEY) API_KEY : String,
+        @Query(StringUtils.LANGUAGE) LANGUAGE : String,
+        @Query(StringUtils.SEARCH_QUERY) QUERY : String,
+        @Query(StringUtils.INCLUDE_ADULT) INCLUDE_ADULT : String
+    ) : Observable<DiscoverResponse>
+
     companion object Factory {
         fun create(): ServerAPI {
             val retrofit = Retrofit.Builder()
