@@ -1,10 +1,11 @@
-package com.android.blessed.testapplication
+package com.android.blessed.testapplication.view
 
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.android.blessed.testapplication.models.Film
+import com.android.blessed.testapplication.R
+import com.android.blessed.testapplication.data.Film
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -14,15 +15,17 @@ import ru.surfstudio.android.easyadapter.holder.BindableViewHolder
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FilmController(
+class FilmsController(
     val onClickListener: (data: Film) -> Unit,
     val onFavouriteClickListener: (data: Film, bool: Boolean) -> Unit
-) : BindableItemController<Film, FilmController.Holder>() {
+) : BindableItemController<Film, FilmsController.Holder>() {
     override fun createViewHolder(parent: ViewGroup): Holder = Holder(parent)
 
     override fun getItemId(data: Film): String = data.id.hashCode().toString()
 
-    inner class Holder(parent: ViewGroup) : BindableViewHolder<Film>(parent, R.layout.film_recycler_view_item) {
+    inner class Holder(parent: ViewGroup) : BindableViewHolder<Film>(parent,
+        R.layout.film_recycler_view_item
+    ) {
         private lateinit var data: Film
         private val filmTitle: TextView
         private val filmDescription: TextView

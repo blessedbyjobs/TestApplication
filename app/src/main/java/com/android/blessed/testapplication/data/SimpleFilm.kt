@@ -1,4 +1,4 @@
-package com.android.blessed.testapplication.db
+package com.android.blessed.testapplication.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

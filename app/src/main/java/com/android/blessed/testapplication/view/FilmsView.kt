@@ -1,10 +1,9 @@
-package com.android.blessed.testapplication
+package com.android.blessed.testapplication.view
 
-import com.android.blessed.testapplication.models.Film
+import com.android.blessed.testapplication.data.Film
 import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.*
 
-interface MainView : MvpView {
+interface FilmsView : MvpView {
     fun displayDiscoveredFilms(films: List<Film>)
 
     fun showProgressBar()

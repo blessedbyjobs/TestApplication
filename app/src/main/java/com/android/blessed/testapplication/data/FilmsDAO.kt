@@ -1,10 +1,10 @@
-package com.android.blessed.testapplication.db
+package com.android.blessed.testapplication.data
 
 import androidx.room.*
 import io.reactivex.Single
 
 @Dao
-interface FilmDAO {
+interface FilmsDAO {
     @Query("SELECT * FROM film_table WHERE id=:id")
     fun findById(id: Int): Single<List<SimpleFilm>>
 

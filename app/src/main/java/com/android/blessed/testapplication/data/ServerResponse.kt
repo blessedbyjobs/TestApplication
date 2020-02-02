@@ -1,7 +1,7 @@
-package com.android.blessed.testapplication.models
+package com.android.blessed.testapplication.data
 import com.google.gson.annotations.SerializedName
 
-data class DiscoverResponse (
+data class ServerResponse (
 	@SerializedName("page") val page : Int,
 	@SerializedName("total_results") val total_results : Int,
 	@SerializedName("total_pages") val total_pages : Int,

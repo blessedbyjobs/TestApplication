@@ -1,5 +1,7 @@
-package com.android.blessed.testapplication.network
+package com.android.blessed.testapplication.di
 
+import com.android.blessed.testapplication.network.ServerAPI
+import com.android.blessed.testapplication.utils.StringUtils
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -12,7 +14,8 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    internal fun serverAPI(retrofit: Retrofit): ServerAPI = retrofit.create(ServerAPI::class.java)
+    internal fun serverAPI(retrofit: Retrofit): ServerAPI = retrofit.create(
+        ServerAPI::class.java)
 
     @Singleton
     @Provides

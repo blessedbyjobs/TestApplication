@@ -1,4 +1,4 @@
-package com.android.blessed.testapplication.network
+package com.android.blessed.testapplication.utils
 
 object StringUtils {
     const val BASE_URL = "https://api.themoviedb.org/3/"

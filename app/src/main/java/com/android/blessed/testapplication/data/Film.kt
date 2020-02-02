@@ -1,6 +1,6 @@
-package com.android.blessed.testapplication.models
+package com.android.blessed.testapplication.data
 
-import com.android.blessed.testapplication.network.StringUtils
+import com.android.blessed.testapplication.utils.StringUtils
 import com.google.gson.annotations.SerializedName
 
 data class Film(

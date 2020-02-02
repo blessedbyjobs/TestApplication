@@ -1,12 +1,13 @@
-package com.android.blessed.testapplication
+package com.android.blessed.testapplication.presenter
 
 import android.app.Application
-import com.android.blessed.testapplication.app.AppModule
-import com.android.blessed.testapplication.app.DaggerAppComponent
-import com.android.blessed.testapplication.db.RoomModule
-import com.android.blessed.testapplication.db.SimpleFilm
-import com.android.blessed.testapplication.models.Film
-import com.android.blessed.testapplication.network.FilmsRepository
+import com.android.blessed.testapplication.di.AppModule
+import com.android.blessed.testapplication.di.DaggerAppComponent
+import com.android.blessed.testapplication.di.RoomModule
+import com.android.blessed.testapplication.data.SimpleFilm
+import com.android.blessed.testapplication.data.Film
+import com.android.blessed.testapplication.repository.FilmsRepository
+import com.android.blessed.testapplication.view.FilmsView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.Completable
@@ -16,7 +17,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 @InjectViewState
-class MainPresenter(application: Application) : MvpPresenter<MainView>(), MainPresenterMVP {
+class FilmsPresenter(application: Application) : MvpPresenter<FilmsView>(),
+    FilmsPresenterMVP {
     @Inject
     lateinit var repository: FilmsRepository
 

@@ -1,4 +1,4 @@
-package com.android.blessed.testapplication
+package com.android.blessed.testapplication.view
 
 import android.os.Bundle
 import android.os.Handler
@@ -6,7 +6,10 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.blessed.testapplication.models.Film
+import com.android.blessed.testapplication.*
+import com.android.blessed.testapplication.data.Film
+import com.android.blessed.testapplication.presenter.FilmsPresenter
+import com.android.blessed.testapplication.utils.CustomSnackBar
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -20,15 +23,15 @@ import ru.surfstudio.android.easyadapter.EasyAdapter
 import ru.surfstudio.android.easyadapter.ItemList
 import java.util.concurrent.TimeUnit
 
-class MainActivity : MvpAppCompatActivity(), MainView {
+class FilmsActivity : MvpAppCompatActivity(), FilmsView {
     @InjectPresenter
-    lateinit var mainPresenter: MainPresenter
+    lateinit var filmsPresenter: FilmsPresenter
 
     @ProvidePresenter
-    fun provideMainPresenter() = MainPresenter(application)
+    fun provideMainPresenter() = FilmsPresenter(application)
 
     private lateinit var easyFilmAdapter: EasyAdapter
-    private lateinit var filmController: FilmController
+    private lateinit var filmsController: FilmsController
 
     private var scrollPosition: Int = -1
     private var queryString: String = ""
@@ -43,9 +46,9 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
         swipe_to_refresh_films.setOnRefreshListener {
             if (queryString == "") {
-                mainPresenter.discoverFilms()
+                filmsPresenter.discoverFilms()
             } else {
-                mainPresenter.searchFilms(queryString)
+                filmsPresenter.searchFilms(queryString)
             }
             hideLoadingError()
             hideEmptyResultsError()
@@ -101,9 +104,9 @@ class MainActivity : MvpAppCompatActivity(), MainView {
                     if (!orientationChanged) {
                         queryString = text
                         if (queryString == "") {
-                            mainPresenter.discoverFilms()
+                            filmsPresenter.discoverFilms()
                         } else {
-                            mainPresenter.searchFilms(queryString)
+                            filmsPresenter.searchFilms(queryString)
                         }
                     }
                     orientationChanged = false
@@ -120,17 +123,23 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         easyFilmAdapter = EasyAdapter()
         films_recycler_view.adapter = easyFilmAdapter
 
-        filmController = FilmController(
+        filmsController = FilmsController(
             onClickListener = {
-                CustomSnackBar(Snackbar.make(main_container, it.title, Snackbar.LENGTH_LONG), this).snackbar.show()
+                CustomSnackBar(
+                    Snackbar.make(
+                        main_container,
+                        it.title,
+                        Snackbar.LENGTH_LONG
+                    ), this
+                ).snackbar.show()
             },
-            onFavouriteClickListener = {
-                    film: Film, isFavourite: Boolean -> mainPresenter.roomRequest(film, isFavourite)
+            onFavouriteClickListener = { film: Film, isFavourite: Boolean ->
+                filmsPresenter.roomRequest(film, isFavourite)
             })
     }
 
     override fun displayDiscoveredFilms(films: List<Film>) {
-        val itemList = ItemList.create().addAll(films, filmController)
+        val itemList = ItemList.create().addAll(films, filmsController)
         easyFilmAdapter.setItems(itemList)
 
         if (scrollPosition != -1) {
@@ -159,7 +168,8 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     override fun showRequestError() =
         CustomSnackBar(
             Snackbar.make(
-                findViewById(R.id.films_recycler_view), resources.getString(R.string.query_error),
+                findViewById(R.id.films_recycler_view),
+                resources.getString(R.string.query_error),
                 Snackbar.LENGTH_LONG
             ), this
         ).snackbar.show()

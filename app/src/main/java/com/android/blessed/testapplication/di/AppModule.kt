@@ -1,4 +1,4 @@
-package com.android.blessed.testapplication.app
+package com.android.blessed.testapplication.di
 
 import android.app.Application
 import dagger.Module
