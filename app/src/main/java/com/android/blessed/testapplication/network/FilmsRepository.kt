@@ -1,15 +1,13 @@
 package com.android.blessed.testapplication.network
 
+import com.android.blessed.testapplication.db.FilmDAO
+import com.android.blessed.testapplication.db.SimpleFilm
 import io.reactivex.Observable
 import com.android.blessed.testapplication.models.DiscoverResponse
+import io.reactivex.Single
+import javax.inject.Inject
 
-object FilmsRepositoryProvider {
-    fun provideFilmsRepository(): FilmsRepository {
-        return FilmsRepository(ServerAPI.create())
-    }
-}
-
-class FilmsRepository(private val api: ServerAPI) {
+class FilmsRepository @Inject constructor(val api: ServerAPI, val dao: FilmDAO) {
     fun discoverFilms() : Observable<DiscoverResponse> {
         return api.discoverFilms(
             StringUtils.API_KEY_VALUE,
@@ -28,4 +26,10 @@ class FilmsRepository(private val api: ServerAPI) {
             StringUtils.INCLUDE_ADULT_VALUE
         )
     }
+
+    fun findFilmById(id: Int): Single<List<SimpleFilm>> = dao.findById(id)
+
+    fun insertFilm(film: SimpleFilm) = dao.insert(film)
+
+    fun deleteFilm(film: SimpleFilm) = dao.remove(film)
 }

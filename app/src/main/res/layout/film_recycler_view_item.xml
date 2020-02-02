@@ -22,7 +22,7 @@
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"/>
 
-        <RelativeLayout
+        <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -32,7 +32,6 @@
                     android:id="@+id/film_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
                     android:maxLines="2"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -42,21 +41,20 @@
             <TextView
                     android:id="@+id/film_description"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="4sp"
-                    android:maxLines="4"
                     android:textStyle="normal"
                     android:textSize="14sp"
                     android:textColor="@color/film_description"
-                    android:layout_below="@+id/film_title"
-                    android:baselineAligned="false"/>
+                    android:baselineAligned="false"
+                    android:layout_weight="1"
+                    android:ellipsize="end"/>
 
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="8dp">
 
                 <LinearLayout
@@ -87,7 +85,7 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

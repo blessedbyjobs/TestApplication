@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.blessed.testapplication.models.Film
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -22,6 +23,9 @@ import java.util.concurrent.TimeUnit
 class MainActivity : MvpAppCompatActivity(), MainView {
     @InjectPresenter
     lateinit var mainPresenter: MainPresenter
+
+    @ProvidePresenter
+    fun provideMainPresenter() = MainPresenter(application)
 
     private lateinit var easyFilmAdapter: EasyAdapter
     private lateinit var filmController: FilmController
@@ -116,9 +120,13 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         easyFilmAdapter = EasyAdapter()
         films_recycler_view.adapter = easyFilmAdapter
 
-        filmController = FilmController {
-            CustomSnackBar(Snackbar.make(main_container, it.title, Snackbar.LENGTH_LONG), this).snackbar.show()
-        }
+        filmController = FilmController(
+            onClickListener = {
+                CustomSnackBar(Snackbar.make(main_container, it.title, Snackbar.LENGTH_LONG), this).snackbar.show()
+            },
+            onFavouriteClickListener = {
+                    film: Film, isFavourite: Boolean -> mainPresenter.roomRequest(film, isFavourite)
+            })
     }
 
     override fun displayDiscoveredFilms(films: List<Film>) {

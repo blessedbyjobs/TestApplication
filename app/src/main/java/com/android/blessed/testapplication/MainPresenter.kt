@@ -1,20 +1,34 @@
 package com.android.blessed.testapplication
 
+import android.app.Application
+import com.android.blessed.testapplication.app.AppModule
+import com.android.blessed.testapplication.app.DaggerAppComponent
+import com.android.blessed.testapplication.db.RoomModule
+import com.android.blessed.testapplication.db.SimpleFilm
 import com.android.blessed.testapplication.models.Film
-import com.android.blessed.testapplication.network.FilmsRepositoryProvider
+import com.android.blessed.testapplication.network.FilmsRepository
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
+import javax.inject.Inject
 
 @InjectViewState
-class MainPresenter : MvpPresenter<MainView>(), MainPresenterMVP {
-    private val repository = FilmsRepositoryProvider.provideFilmsRepository()
+class MainPresenter(application: Application) : MvpPresenter<MainView>(), MainPresenterMVP {
+    @Inject
+    lateinit var repository: FilmsRepository
 
-    var films: List<Film> = ArrayList()
+    var films = mutableListOf<Film>()
 
     init {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(application))
+            .roomModule(RoomModule(application))
+            .build()
+            .inject(this)
+
         discoverFilms()
     }
 
@@ -35,19 +49,25 @@ class MainPresenter : MvpPresenter<MainView>(), MainPresenterMVP {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                { result ->
-                    run {
-                        films = result.results
-                        viewState.displayDiscoveredFilms(films)
-                    }
-                }, {
-                    if (films.isEmpty()) {
-                        viewState.showLoadingError()
-                    } else {
-                        viewState.showRequestError()
-                    }
-                })
+            .flatMapIterable { films -> films.results }
+            .flatMap { film ->
+                repository.findFilmById(film.id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .toObservable()
+                    .map { results -> film.copy(isFavourite = results.isNotEmpty()) }
+            }
+            .toList()
+            .subscribe({ result ->
+                films = result
+                viewState.displayDiscoveredFilms(films)
+            }, {
+                if (films.isEmpty()) {
+                    viewState.showLoadingError()
+                } else {
+                    viewState.showRequestError()
+                }
+            })
     }
 
     override fun searchFilms(title: String) {
@@ -67,23 +87,50 @@ class MainPresenter : MvpPresenter<MainView>(), MainPresenterMVP {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
+            .flatMapIterable { films -> films.results }
+            .flatMap { film ->
+                repository.findFilmById(film.id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .toObservable()
+                    .map { results -> film.copy(isFavourite = results.isNotEmpty()) }
+            }
+            .toList()
             .subscribe(
                 { result ->
-                    run {
-                        if (result.results.isNotEmpty()) {
-                            films = result.results
-                            viewState.displayDiscoveredFilms(films)
-                        } else {
-                            viewState.showEmptyResultsError(title)
-                            viewState.displayDiscoveredFilms(ArrayList())
-                        }
+                    if (result.isNotEmpty()) {
+                        films = result as MutableList<Film>
+                        viewState.displayDiscoveredFilms(films)
+                    } else {
+                        viewState.showEmptyResultsError(title)
+                        viewState.displayDiscoveredFilms(ArrayList())
                     }
                 }, {
                     if (it is IOException) {
                         viewState.showRequestError()
                     } else {
+                        viewState.displayDiscoveredFilms(ArrayList())
                         viewState.showLoadingError()
                     }
                 })
+    }
+
+    override fun roomRequest(film: Film, isFavourite: Boolean) {
+        val simpleFilm = SimpleFilm(film.id)
+        if (isFavourite) {
+            val completable = Completable.fromAction {
+                repository.deleteFilm(simpleFilm)
+            }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe { films.find { it.id == film.id }?.isFavourite = !isFavourite }
+        } else {
+            val completable = Completable.fromAction {
+                repository.insertFilm(simpleFilm)
+            }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe { films.find { it.id == film.id }?.isFavourite = !isFavourite }
+        }
     }
 }
