@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TestApplication</string>
+
+    <string name="search_bar_text">Поиск по названию фильма</string>
+
+    <string name="query_error">Проверьте ваше соединение с интернетом и попробуйте еще раз</string>
+    <string name="loading_error">Нам не удалось обработать \nваш запрос. Попробуйте еще раз</string>
+    <string name="empty_results_error">По запросу \"%1$s\" ничего не найдено</string>
 </resources>

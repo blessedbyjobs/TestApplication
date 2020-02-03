@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#004fff</color>
+    <color name="mainBackground">#1c1d1f</color>
+    <color name="searchBar">#fafafa</color>
+
+    <color name="film_title">#de000000</color>
+    <color name="film_description">#8b000000</color>
+
+    <color name="snackbar_background">#323232</color>
+    <color name="error_textview_color">#b4b4b4</color>
 </resources>
