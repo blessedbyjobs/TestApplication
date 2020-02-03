@@ -52,7 +52,7 @@ class FilmsPresenter(application: Application) : MvpPresenter<FilmsView>(),
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .flatMapIterable { films -> films.results }
-            .flatMap { film ->
+            .concatMap { film ->
                 repository.findFilmById(film.id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +90,7 @@ class FilmsPresenter(application: Application) : MvpPresenter<FilmsView>(),
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .flatMapIterable { films -> films.results }
-            .flatMap { film ->
+            .concatMap { film ->
                 repository.findFilmById(film.id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
