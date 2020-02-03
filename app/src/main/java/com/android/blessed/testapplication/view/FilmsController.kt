@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import kotlinx.android.synthetic.main.film_recycler_view_item.view.*
 import ru.surfstudio.android.easyadapter.controller.BindableItemController
 import ru.surfstudio.android.easyadapter.holder.BindableViewHolder
 import java.text.SimpleDateFormat
@@ -46,6 +47,10 @@ class FilmsController(
         override fun bind(data: Film) {
             this.data = data
             filmTitle.text = data.title
+
+            itemView.film_title.viewTreeObserver.addOnGlobalLayoutListener {
+                filmDescription.maxLines = if (itemView.film_title.height > 90) 3 else 4
+            }
             filmDescription.text = data.overview
 
             isFavourite = data.isFavourite
